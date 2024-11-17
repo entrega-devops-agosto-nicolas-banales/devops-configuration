@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.terraform/
+.terraform.lock.hcl
+*.log
+.DS_Store
+Thumbs.db
+.env
