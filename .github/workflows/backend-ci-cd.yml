@@ -1,0 +1,96 @@
+# devops-configuration/.github/workflows/backend-ci-cd.yml
+
+name: Backend CI/CD 
+
+on:
+  workflow_call:
+    inputs:
+      service-name:
+        description: 'Name of the backend service'
+        required: true
+        type: string
+      dockerhub-username:
+        description: 'DockerHub Username'
+        required: true
+        type: string
+      dockerhub-token:
+        description: 'DockerHub Access Token'
+        required: true
+        type: string
+      sonar-token:
+        description: 'SonarQube Token'
+        required: true
+        type: string
+      environment:
+        description: 'Deployment environment (dev, test, prod)'
+        required: true
+        type: string
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+      SONAR_HOST_URL:
+        required: true
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build with Maven
+        run: mvn clean install --no-transfer-progress
+
+      - name: Run SonarQube Analysis
+        env:
+          SONAR_TOKEN: ${{ inputs.sonar-token }}
+        run: mvn sonar:sonar -Dsonar.projectKey=${{ inputs.service-name }} -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} -Dsonar.login=$SONAR_TOKEN
+
+      - name: Run Tests
+        run: mvn test
+
+      - name: Docker Buildx Setup
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ inputs.dockerhub-username }}
+          password: ${{ inputs.dockerhub-token }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ inputs.dockerhub-username }}/${{ inputs.service-name }}:${{ github.sha }}
+
+      - name: Deploy to AWS
+        if: success()
+        run: |
+          # Aquí puedes agregar comandos para desplegar a AWS usando Terraform o AWS CLI
+          # Por ejemplo:
+          # terraform init
+          # terraform apply -auto-approve -var="environment=${{ inputs.environment }}"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
