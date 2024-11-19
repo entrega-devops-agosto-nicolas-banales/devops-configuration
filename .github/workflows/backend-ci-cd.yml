@@ -26,8 +26,6 @@ on:
         required: true
         type: string
     secrets:
-      GITHUB_TOKEN:
-        required: true
       SONAR_HOST_URL:
         required: true
       AWS_ACCESS_KEY_ID:
