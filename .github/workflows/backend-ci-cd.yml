@@ -62,22 +62,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Cache SonarQube Cloud packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: |
-            ${{ runner.os }}-sonar
+      - name: Build with Maven
+        run: mvn clean install --no-transfer-progress
 
-      - name: Build and Analyze
+      - name: Debug List SonarCloud of ${{ inputs.service-name }}     
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.sonar-token }}
+          SONAR_TOKEN: ${{ secrets.sonar-token }}    
         run: |
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-            -Dsonar.projectKey=entrega-devops-agosto-nicolas-banales_orders-service \
-            -Dsonar.host.url=${{ secrets.sonar-host-url }}
+          curl -u $SONAR_TOKEN: https://sonarcloud.io/api/projects/search?organization=entrega-devops-agosto-nicolas-banales    
+
+      - name: Run SonarQube Analysis with Maven
+        env:
+          SONAR_TOKEN: ${{ secrets.sonar-token }}
+          SONAR_HOST_URL: ${{ secrets.sonar-host-url }}
+        run: mvn sonar:sonar \
+          -Dsonar.projectKey=entrega-devops-agosto-nicolas-banales_${{ inputs.service-name }} \
+          -Dsonar.organization=entrega-devops-agosto-nicolas-banales \
+          -Dsonar.login=$SONAR_TOKEN
 
       - name: Run Tests
         run: mvn test
