@@ -70,17 +70,17 @@ jobs:
           SONAR_TOKEN: ${{ secrets.sonar-token }}    
         run: |
           curl -u $SONAR_TOKEN: https://sonarcloud.io/api/projects/search?organization=entrega-devops-agosto-nicolas-banales    
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        with:
-          args: >
-            -Dsonar.projectKey=entrega-devops-agosto-nicolas-banales_${{ inputs.service-name }}
-            -Dsonar.organization=entrega-devops-agosto-nicolas-banales
-            -Dsonar.host.url=https://sonarcloud.io
+          
+      - name: Run SonarQube Analysis with Maven
         env:
           SONAR_TOKEN: ${{ secrets.sonar-token }}
-          
+          SONAR_HOST_URL: ${{ secrets.sonar-host-url }}
+        run: mvn sonar:sonar \
+          -Dsonar.projectKey=entrega-devops-agosto-nicolas-banales_${{ inputs.service-name }} \
+          -Dsonar.organization=entrega-devops-agosto-nicolas-banales \
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.login=$SONAR_TOKEN
+
       - name: Run Tests
         run: mvn test
 
