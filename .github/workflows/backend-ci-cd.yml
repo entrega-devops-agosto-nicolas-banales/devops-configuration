@@ -75,11 +75,13 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.sonar-token }}
           SONAR_HOST_URL: ${{ secrets.sonar-host-url }}
-        run: mvn sonar:sonar \
-          -Dsonar.projectKey=entrega-devops-agosto-nicolas-banales_${{ inputs.service-name }} \
-          -Dsonar.organization=entrega-devops-agosto-nicolas-banales \
+          SONAR_ORGANIZATION: entrega-devops-agosto-nicolas-banales
+        run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar
+          -Dsonar.projectKey=entrega-devops-agosto-nicolas-banales_${{ inputs.service-name }}
+          -Dsonar.organization=entrega-devops-agosto-nicolas-banales
           -Dsonar.login=$SONAR_TOKEN
-
+          -X -e
+                
       - name: Run Tests
         run: mvn test
 
