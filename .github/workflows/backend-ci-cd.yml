@@ -65,7 +65,7 @@ jobs:
       - name: Build with Maven
         run: mvn clean install --no-transfer-progress
 
-      - name: Debug List SonarCloud of ${{ inputs.service-name }} Token ${{ secrets.sonar-token }}     
+      - name: Debug List SonarCloud of ${{ inputs.service-name }}     
         env:
           SONAR_TOKEN: ${{ secrets.sonar-token }}    
         run: |
@@ -75,7 +75,7 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@master
         with:
           args: >
-            -Dsonar.projectKey=${{ inputs.service-name }}
+            -Dsonar.projectKey=entrega-devops-agosto-nicolas-banales_${{ inputs.service-name }}
             -Dsonar.organization=entrega-devops-agosto-nicolas-banales
             -Dsonar.host.url=https://sonarcloud.io
         env:
