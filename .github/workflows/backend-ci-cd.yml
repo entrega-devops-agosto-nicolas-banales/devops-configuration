@@ -72,6 +72,7 @@ jobs:
             -Dsonar.projectKey=${{ inputs.service-name }}
             -Dsonar.organization=entrega-devops-agosto-nicolas-banales
             -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.projectBaseDir=./ 
         env:
           SONAR_TOKEN: ${{ secrets.sonar-token }}
 
