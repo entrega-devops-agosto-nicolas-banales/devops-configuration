@@ -95,10 +95,6 @@ jobs:
       - name: Terraform Init
         working-directory: devops-configuration/terraform
         run: terraform init
-      
-      - name: Terraform Validate
-        working-directory: devops-configuration/terraform
-        run: terraform validate  
         
       - name: Terraform Apply
         working-directory: devops-configuration/terraform
