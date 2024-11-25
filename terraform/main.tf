@@ -46,7 +46,7 @@ resource "aws_lb" "app_lb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = data.aws_subnet_ids.public.ids
+  subnets            = data.aws_subnets.public.ids
 
   tags = {
     Name = "app-lb"
@@ -179,7 +179,7 @@ resource "aws_ecs_service" "ecs_service" {
   deployment_maximum_percent         = 200
 
   network_configuration {
-    subnets          = data.aws_subnet_ids.public.ids
+    subnets          = data.aws_subnets.public.ids
     security_groups  = [aws_security_group.ecs_tasks_sg.id]
     assign_public_ip = true
   }
