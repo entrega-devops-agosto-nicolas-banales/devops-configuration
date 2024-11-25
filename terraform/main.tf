@@ -10,8 +10,11 @@ data "aws_vpc" "default" {
   default = true
 }
 
-data "aws_subnet_ids" "public" {
-  vpc_id = data.aws_vpc.default.id
+data "aws_subnet" "public" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
 }
 
 data "aws_availability_zones" "available" {
@@ -147,7 +150,6 @@ resource "aws_ecs_task_definition" "task_definition" {
           protocol      = "tcp"
         }
       ]
-      # Añadir variables de entorno sólo para orders-service
       environment = each.key == "orders-service" ? [
         {
           name  = "PAYMENTS_SERVICE_ENDPOINT"
@@ -166,7 +168,6 @@ resource "aws_ecs_task_definition" "task_definition" {
   ])
 }
 
-# Servicio ECS
 resource "aws_ecs_service" "ecs_service" {
   for_each            = aws_ecs_task_definition.task_definition
   name                = each.key
