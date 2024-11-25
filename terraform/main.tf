@@ -89,9 +89,9 @@ resource "aws_lb_listener" "app_listener" {
 }
 
 resource "aws_lb_listener_rule" "listener_rule" {
-  for_each        = toset(var.service_names)
-  listener_arn    = aws_lb_listener.app_listener.arn
-  priority        = 100 + index(var.service_names, each.key)
+  for_each     = toset(var.service_names)
+  listener_arn = aws_lb_listener.app_listener.arn
+  priority     = 100 + index(var.service_names, each.key)
   
   action {
     type             = "forward"
@@ -100,7 +100,7 @@ resource "aws_lb_listener_rule" "listener_rule" {
   
   condition {
     path_pattern {
-      patterns = ["/${each.key}/*"]
+      values = ["/${each.key}/*"]
     }
   }
 }
