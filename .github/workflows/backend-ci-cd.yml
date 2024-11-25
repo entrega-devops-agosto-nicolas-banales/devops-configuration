@@ -95,7 +95,11 @@ jobs:
       - name: Terraform Init
         working-directory: devops-configuration/terraform
         run: terraform init
-
+      
+      - name: Terraform Validate
+        working-directory: devops-configuration/terraform
+        run: terraform validate  
+        
       - name: Terraform Apply
         working-directory: devops-configuration/terraform
         run: terraform apply -auto-approve -var "aws_access_key=${{ secrets.aws-access-key-id }}" -var "aws_secret_key=${{ secrets.aws-secret-access-key }}" -var "aws_session_token=${{ secrets.aws-session-token }}" -var "dockerhub_username=${{ secrets.dockerhub-username }}" -var "image_tag=${{ github.sha }}" -var 'service_names=["${{ inputs.service-name }}"]'
