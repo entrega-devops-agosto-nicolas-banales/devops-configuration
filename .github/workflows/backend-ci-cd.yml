@@ -88,7 +88,16 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_wrapper: false
-
+          
+      - name: Debug Variables
+        run: |
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}"
+          echo "AWS_SECRET_ACCESS_KEY is set"
+          echo "AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}"
+          echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}"
+          echo "image_tag=${{ github.sha }}"
+          echo "service_name=${{ inputs.service-name }}"
+    
       - name: Terraform Init
         working-directory: devops-configuration/terraform
         run: terraform init
