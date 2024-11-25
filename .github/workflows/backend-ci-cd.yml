@@ -98,7 +98,7 @@ jobs:
 
       - name: Terraform Apply
         working-directory: devops-configuration/terraform
-        run: terraform apply -auto-approve -var "aws_access_key=${{ secrets.aws-access-key-id }}" -var "aws_secret_key=${{ secrets.aws-secret-access-key }}" -var "aws_session_token=${{ secrets.aws-session-token }}" -var "dockerhub_username=${{ secrets.dockerhub-username }}" -var "image_tag=${{ github.sha }}" -var "service_name=${{ inputs.service-name }}"
+        run: terraform apply -auto-approve -var "aws_access_key=${{ secrets.aws-access-key-id }}" -var "aws_secret_key=${{ secrets.aws-secret-access-key }}" -var "aws_session_token=${{ secrets.aws-session-token }}" -var "dockerhub_username=${{ secrets.dockerhub-username }}" -var "image_tag=${{ github.sha }}" -var 'service_names=["${{ inputs.service-name }}"]'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
