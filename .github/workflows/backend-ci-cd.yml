@@ -30,6 +30,9 @@ on:
       aws-secret-access-key:
         description: 'AWS Secret Access Key'
         required: true
+      aws-session-token:
+        description: 'AWS Session Token'
+        required: true  
 
 jobs:
   build-and-deploy:
@@ -91,10 +94,10 @@ jobs:
           
       - name: Debug Variables
         run: |
-          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}"
-          echo "AWS_SECRET_ACCESS_KEY is set"
-          echo "AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}"
-          echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}"
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.aws-access-key-id }}"
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.aws-secret-access-key }}
+          echo "AWS_SESSION_TOKEN=${{ secrets.aws-session-token }}"
+          echo "DOCKERHUB_USERNAME=${{ secrets.dockerhub-username }}"
           echo "image_tag=${{ github.sha }}"
           echo "service_name=${{ inputs.service-name }}"
     
@@ -104,7 +107,7 @@ jobs:
 
       - name: Terraform Apply
         working-directory: devops-configuration/terraform
-        run: terraform apply -auto-approve -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var "aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var "aws_session_token=${{ secrets.AWS_SESSION_TOKEN }}" -var "dockerhub_username=${{ secrets.DOCKERHUB_USERNAME }}" -var "image_tag=${{ github.sha }}" -var "service_name=${{ inputs.service-name }}"
+        run: terraform apply -auto-approve -var "aws_access_key=${{ secrets.aws-access-key-id }}" -var "aws_secret_key=${{ secrets.aws-secret-access-key }}" -var "aws_session_token=${{ secrets.aws-session-token }}" -var "dockerhub_username=${{ secrets.dockerhub-username }}" -var "image_tag=${{ github.sha }}" -var "service_name=${{ inputs.service-name }}"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
