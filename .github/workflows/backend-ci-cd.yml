@@ -92,15 +92,6 @@ jobs:
         with:
           terraform_wrapper: false
           
-      - name: Debug Variables
-        run: |
-          echo "AWS_ACCESS_KEY_ID=${{ secrets.aws-access-key-id }}"
-          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.aws-secret-access-key }}
-          echo "AWS_SESSION_TOKEN=${{ secrets.aws-session-token }}"
-          echo "DOCKERHUB_USERNAME=${{ secrets.dockerhub-username }}"
-          echo "image_tag=${{ github.sha }}"
-          echo "service_name=${{ inputs.service-name }}"
-    
       - name: Terraform Init
         working-directory: devops-configuration/terraform
         run: terraform init
