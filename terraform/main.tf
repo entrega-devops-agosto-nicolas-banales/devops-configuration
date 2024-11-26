@@ -25,7 +25,7 @@ resource "aws_security_group" "ecs_sg" {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"] # Permitir acceso de cualquier lado
   }
 
   egress {
@@ -46,8 +46,8 @@ resource "aws_ecs_task_definition" "task_definition" {
   family                   = each.key
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "256" # Adjust as per service needs
-  memory                   = "512" # Adjust as per service needs
+  cpu                      = "256" # Ajusta según necesidades
+  memory                   = "512" # Ajusta según necesidades
 
   container_definitions = jsonencode([
     {
@@ -64,14 +64,16 @@ resource "aws_ecs_task_definition" "task_definition" {
   ])
 }
 
-resource "aws_lb" "application_lb" {
-  name               = "backend-app-lb"
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.ecs_sg.id]
-  subnets            = data.aws_subnets.public.ids
+resource "aws_lb" "application_lbs" {
+  for_each            = toset(var.service_names)
+  name                = "${each.key}-alb"
+  load_balancer_type  = "application"
+  security_groups     = [aws_security_group.ecs_sg.id]
+  subnets             = data.aws_subnets.public.ids
+  enable_deletion_protection = false
 
   tags = {
-    Name = "backend-app-lb"
+    Name = "${each.key}-alb"
   }
 }
 
@@ -95,34 +97,16 @@ resource "aws_lb_target_group" "target_groups" {
   }
 }
 
-resource "aws_lb_listener" "http_listener" {
-  load_balancer_arn = aws_lb.application_lb.arn
+resource "aws_lb_listener" "http_listeners" {
+  for_each          = aws_lb.application_lbs
+  load_balancer_arn = each.value.arn
   port              = 80
   protocol          = "HTTP"
 
   default_action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "404 Not Found"
-      status_code  = "404"
-    }
-  }
-}
-
-resource "aws_lb_listener_rule" "service_rules" {
-  for_each     = toset(var.service_names)
-  listener_arn = aws_lb_listener.http_listener.arn
-  priority     = 100 + index(var.service_names, each.key)
-
-  action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.target_groups[each.key].arn
-  }
-
-  condition {
-    path_pattern {
-      values = ["/${each.key}/*"]
+    type = "forward"
+    forward {
+      target_group_arn = aws_lb_target_group.target_groups[each.key].arn
     }
   }
 }
@@ -146,10 +130,8 @@ resource "aws_ecs_service" "ecs_services" {
     container_name   = each.key
     container_port   = 8080
   }
-
-  depends_on = [aws_lb_listener_rule.service_rules]
 }
 
-output "alb_dns_name" {
-  value = aws_lb.application_lb.dns_name
+output "alb_dns_names" {
+  value = { for name, alb in aws_lb.application_lbs : name => alb.dns_name }
 }
