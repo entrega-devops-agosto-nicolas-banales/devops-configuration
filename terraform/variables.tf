@@ -21,7 +21,7 @@ variable "dockerhub_username" {
 
 variable "service_names" {
   type    = list(string)
-  default = ["orders-service", "payments-service", "products-service", "shipping-service"]
+  default = ["payments-service", "products-service", "shipping-service", "orders-service"]
 }
 
 variable "desired_count" {

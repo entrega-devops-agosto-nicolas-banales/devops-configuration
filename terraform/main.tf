@@ -52,7 +52,7 @@ resource "aws_ecs_task_definition" "task_definition" {
   container_definitions = jsonencode([
     {
       name      = each.key
-      image     = "${var.dockerhub_username}/${each.key}:latest" # Placeholder image, CI/CD will deploy the real one
+      image     = "${var.dockerhub_username}/${each.key}:latest"
       essential = true
       portMappings = [
         {
