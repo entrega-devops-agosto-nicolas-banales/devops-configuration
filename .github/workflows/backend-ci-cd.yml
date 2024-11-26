@@ -87,20 +87,3 @@ jobs:
           push: true
           tags: ${{ secrets.dockerhub-username }}/${{ inputs.service-name }}:${{ github.sha }}
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_wrapper: false
-          
-      - name: Terraform Init
-        working-directory: devops-configuration/terraform
-        run: terraform init
-        
-      - name: Terraform Apply
-        working-directory: devops-configuration/terraform
-        run: terraform apply -auto-approve -var "aws_access_key=${{ secrets.aws-access-key-id }}" -var "aws_secret_key=${{ secrets.aws-secret-access-key }}" -var "dockerhub_username=${{ secrets.dockerhub-username }}" -var "image_tag=${{ github.sha }}" -var 'service_names=["${{ inputs.service-name }}"]'
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.aws-access-key-id }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.aws-secret-access-key }}
-          AWS_SESSION_TOKEN: ${{ secrets.aws-session-token }}
-
