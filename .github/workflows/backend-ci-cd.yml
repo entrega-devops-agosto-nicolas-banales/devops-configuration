@@ -58,7 +58,10 @@ jobs:
           distribution: 'adopt'
 
       - name: Build with Maven and Run Tests 
-        run: mvn clean install --no-transfer-progress
+        run: mvn clean verify --no-transfer-progress
+      
+      - name: Verify .jar file exists
+        run: ls -la target/  
 
       - name: Run SonarQube Analysis with Maven
         env:
@@ -86,14 +89,7 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.dockerhub-username }}/${{ inputs.service-name }}:${{ github.sha }}
-      
-      - name: Debug Secrets
-        run: |
-          echo "AWS_ACCESS_KEY_ID=${{ secrets.aws-access-key-id }}" | sed 's/./& /g' | tr -d '\n'
-          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.aws-secret-access-key }}" | sed 's/./& /g' | tr -d '\n'
-          echo "AWS_SESSION_TOKEN=${{ secrets.aws-session-token }}" | sed 's/./& /g' | tr -d '\n'
-        shell: bash
-    
+
       - name: Deploy to ECS
         run: |
           aws ecs update-service \
