@@ -88,7 +88,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.dockerhub-username }}/${{ inputs.service-name }}:${{ github.sha }}
+          tags: |
+            ${{ secrets.dockerhub-username }}/${{ inputs.service-name }}:${{ github.sha }}
+            ${{ secrets.dockerhub-username }}/${{ inputs.service-name }}:latest
 
       - name: Deploy to ECS
         run: |
