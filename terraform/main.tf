@@ -87,9 +87,9 @@ resource "aws_lb_target_group" "target_groups" {
   vpc_id      = data.aws_vpc.default.id
 
   health_check {
-    path                = "/"
+    path                = lookup(var.service_health_paths, each.key, "/")
     protocol            = "HTTP"
-    matcher             = "200-399"
+    matcher             = "200-499"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 2
@@ -106,7 +106,9 @@ resource "aws_lb_listener" "http_listeners" {
   default_action {
     type = "forward"
     forward {
-      target_group_arn = aws_lb_target_group.target_groups[each.key].arn
+      target_group {
+        arn = aws_lb_target_group.target_groups[each.key].arn
+      }
     }
   }
 }

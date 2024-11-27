@@ -28,3 +28,13 @@ variable "desired_count" {
   type    = number
   default = 1
 }
+
+variable "service_health_paths" {
+  type = map(string)
+  default = {
+    "products-service" = "/products"
+    "orders-service"   = "/"
+    "payments-service" = "/"
+    "shipping-service" = "/"
+  }
+}
