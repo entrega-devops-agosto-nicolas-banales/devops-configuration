@@ -71,33 +71,24 @@ resource "aws_ecs_task_definition" "task_definition" {
   cpu                      = "256"
   memory                   = "512"
 
-  container_definitions = jsonencode([
-    {
-      name      = each.key
-      image     = "${var.dockerhub_username}/${each.key}:latest"
-      essential = true
-      portMappings = [
-        {
-          containerPort = 8080
-          protocol      = "tcp"
-        }
-      ]
-      environment = each.key == "orders-service" ? [
-        {
-          name  = "PAYMENTS_SERVICE_ENDPOINT"
-          value = var.payments_service_endpoint
-        },
-        {
-          name  = "PRODUCTS_SERVICE_ENDPOINT"
-          value = var.products_service_endpoint
-        },
-        {
-          name  = "SHIPPING_SERVICE_ENDPOINT"
-          value = var.shipping_service_endpoint
-        }
-      ] : null
-    }
-  ])
+  ccontainer_definitions = jsonencode([
+  {
+    name      = each.key
+    image     = "${var.dockerhub_username}/${each.key}:latest"
+    essential = true
+    portMappings = [
+      {
+        containerPort = 8080
+        protocol      = "tcp"
+      }
+    ]
+    command = each.key == "orders-service" ? [
+      var.payments_service_endpoint,
+      var.shipping_service_endpoint,
+      var.products_service_endpoint
+    ] : null
+  }
+])
 }
 
 
