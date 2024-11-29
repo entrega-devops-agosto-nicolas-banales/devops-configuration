@@ -10,5 +10,10 @@ COPY target/orders-service-example-0.0.1-SNAPSHOT-spring-boot.jar app.jar
 # Puerto
 EXPOSE 8080
 
-# Punto de entrada
+# Argumentos para ECS
+ENV PAYMENTS_SERVICE_ENDPOINT=""
+ENV SHIPPING_SERVICE_ENDPOINT=""
+ENV PRODUCTS_SERVICE_ENDPOINT=""
+
+# 
 ENTRYPOINT ["java", "-jar", "/app.jar"]
