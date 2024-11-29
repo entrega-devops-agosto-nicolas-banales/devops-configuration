@@ -71,7 +71,7 @@ resource "aws_ecs_task_definition" "task_definition" {
   cpu                      = "256"
   memory                   = "512"
 
-  ccontainer_definitions = jsonencode([
+  container_definitions = jsonencode([
   {
     name      = each.key
     image     = "${var.dockerhub_username}/${each.key}:latest"
