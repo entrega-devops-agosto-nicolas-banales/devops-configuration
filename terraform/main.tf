@@ -45,9 +45,16 @@ resource "aws_security_group" "alb_sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow public HTTP traffic"
+  }
+
+  ingress {
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
     security_groups = [aws_security_group.ecs_sg.id]
-    description     = "Permite acceso desde las tareas ECS"
-    cidr_blocks = ["0.0.0.0/0"] 
+    description     = "Allow traffic from ECS tasks"
   }
 
   egress {
@@ -72,32 +79,32 @@ resource "aws_ecs_task_definition" "task_definition" {
   memory                   = "512"
 
   container_definitions = jsonencode([
-  {
-    name      = each.key
-    image     = "${var.dockerhub_username}/${each.key}:latest"
-    essential = true
-    portMappings = [
-      {
-        containerPort = 8080
-        protocol      = "tcp"
-      }
-    ]
-    environment = each.key == "orders-service" ? [
-      {
-        name  = "PAYMENTS_SERVICE_ENDPOINT"
-        value = var.payments_service_endpoint
-      },
-      {
-        name  = "PRODUCTS_SERVICE_ENDPOINT"
-        value = var.products_service_endpoint
-      },
-      {
-        name  = "SHIPPING_SERVICE_ENDPOINT"
-        value = var.shipping_service_endpoint
-      }
-    ] : null
-  }
-])
+    {
+      name      = each.key
+      image     = "${var.dockerhub_username}/${each.key}:latest"
+      essential = true
+      portMappings = [
+        {
+          containerPort = 8080
+          protocol      = "tcp"
+        }
+      ]
+      environment = each.key == "orders-service" ? [
+        {
+          name  = "PAYMENTS_SERVICE_ENDPOINT"
+          value = var.payments_service_endpoint
+        },
+        {
+          name  = "PRODUCTS_SERVICE_ENDPOINT"
+          value = var.products_service_endpoint
+        },
+        {
+          name  = "SHIPPING_SERVICE_ENDPOINT"
+          value = var.shipping_service_endpoint
+        }
+      ] : null
+    }
+  ])
 }
 
 
