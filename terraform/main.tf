@@ -92,15 +92,15 @@ resource "aws_ecs_task_definition" "task_definition" {
       environment = each.key == "orders-service" ? [
         {
           name  = "PAYMENTS_SERVICE_ENDPOINT"
-          value = var.payments_service_endpoint
+          value = "http://${aws_lb.application_lbs["payments-service"].dns_name}"
         },
         {
           name  = "PRODUCTS_SERVICE_ENDPOINT"
-          value = var.products_service_endpoint
+          value = "http://${aws_lb.application_lbs["products-service"].dns_name}"
         },
         {
           name  = "SHIPPING_SERVICE_ENDPOINT"
-          value = var.shipping_service_endpoint
+          value = "http://${aws_lb.application_lbs["shipping-service"].dns_name}"
         }
       ] : null
     }
@@ -158,17 +158,12 @@ resource "aws_lb_listener" "http_listeners" {
 }
 
 resource "aws_s3_bucket" "frontend_bucket" {
-  bucket = "fe-app-s3" # Replace with a unique bucket name
+  bucket = "fe-app-s3"
 
   tags = {
     Environment = "Production"
     Team        = "DevOps"
   }
-}
-
-resource "aws_s3_bucket_acl" "frontend_bucket_acl" {
-  bucket = aws_s3_bucket.frontend_bucket.id
-  acl    = "public-read"
 }
 
 resource "aws_s3_bucket_website_configuration" "frontend_website" {
@@ -181,6 +176,15 @@ resource "aws_s3_bucket_website_configuration" "frontend_website" {
   error_document {
     key = "index.html"
   }
+}
+
+resource "aws_s3_bucket_public_access_block" "frontend_bucket" {
+  bucket = aws_s3_bucket.frontend_bucket.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
 }
 
 resource "aws_s3_bucket_policy" "frontend_policy" {

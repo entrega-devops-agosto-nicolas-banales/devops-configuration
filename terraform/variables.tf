@@ -38,16 +38,3 @@ variable "service_health_paths" {
     "shipping-service" = "/"
   }
 }
-
-variable "payments_service_endpoint" {
-  type = string
-}
-
-variable "products_service_endpoint" {
-  type = string
-}
-
-variable "shipping_service_endpoint" {
-  type = string
-}
-
