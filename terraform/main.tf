@@ -157,6 +157,53 @@ resource "aws_lb_listener" "http_listeners" {
   }
 }
 
+resource "aws_s3_bucket" "frontend_bucket" {
+  bucket = "fe-app-s3" # Replace with a unique bucket name
+
+  tags = {
+    Environment = "Production"
+    Team        = "DevOps"
+  }
+}
+
+resource "aws_s3_bucket_acl" "frontend_bucket_acl" {
+  bucket = aws_s3_bucket.frontend_bucket.id
+  acl    = "public-read"
+}
+
+resource "aws_s3_bucket_website_configuration" "frontend_website" {
+  bucket = aws_s3_bucket.frontend_bucket.id
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "index.html"
+  }
+}
+
+resource "aws_s3_bucket_policy" "frontend_policy" {
+  bucket = aws_s3_bucket.frontend_bucket.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid       = "PublicReadGetObject",
+        Effect    = "Allow",
+        Principal = "*",
+        Action    = "s3:GetObject",
+        Resource  = "${aws_s3_bucket.frontend_bucket.arn}/*"
+      }
+    ]
+  })
+}
+
+output "s3_bucket_name" {
+  value = aws_s3_bucket.frontend_bucket.bucket
+}
+
 resource "aws_ecs_service" "ecs_services" {
   for_each            = aws_ecs_task_definition.task_definition
   name                = each.key
