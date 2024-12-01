@@ -31,7 +31,8 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: build-artifacts
-        
+        path: ./dist
+
     - name: List Workspace Files
       run: ls -R
     
