@@ -27,6 +27,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: build-artifacts
+
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v3
       with:
@@ -37,3 +42,4 @@ jobs:
 
     - name: Sync Files to S3
       run: aws s3 sync ./dist s3://${{ inputs.bucket-name }} --delete
+
