@@ -11,6 +11,16 @@ on:
         description: 'Deployment environment (dev, test, prod)'
         required: true
         type: string
+    secrets:
+      aws-access-key-id:
+        description: 'AWS Access Key ID'
+        required: true
+      aws-secret-access-key:
+        description: 'AWS Secret Access Key'
+        required: true
+      aws-session-token:
+        description: 'AWS Session Token'
+        required: false 
 
 jobs:
   deploy:
@@ -20,9 +30,9 @@ jobs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v3
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        aws-access-key-id: ${{ secrets.aws-access-key-id }}
+        aws-secret-access-key: ${{ secrets.aws-secret-access-key }}
+        aws-session-token: ${{ secrets.aws-session-token }}
         aws-region: us-east-1
 
     - name: Sync Files to S3
