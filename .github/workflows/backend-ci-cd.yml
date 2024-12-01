@@ -48,8 +48,12 @@ jobs:
           repository: entrega-devops-agosto-nicolas-banales/devops-configuration
           path: devops-configuration
 
-      - name: Copy Dockerfile
-        run: cp devops-configuration/dockerfiles/${{ inputs.service-name }}/Dockerfile .
+      - name: Copy Dockerfile and start.sh
+        run: |
+          cp devops-configuration/dockerfiles/${{ inputs.service-name }}/Dockerfile .
+          if [ -f devops-configuration/dockerfiles/${{ inputs.service-name }}/start.sh ]; then
+            cp devops-configuration/dockerfiles/${{ inputs.service-name }}/start.sh .
+          fi
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
