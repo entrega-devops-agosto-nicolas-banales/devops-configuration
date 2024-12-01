@@ -31,7 +31,10 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: build-artifacts
-
+        
+    - name: List Workspace Files
+      run: ls -R
+    
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v3
       with:
