@@ -90,11 +90,21 @@ resource "aws_ecs_task_definition" "task_definition" {
         }
       ]
       
-      command = each.key == "orders-service" ? [
-        "http://payments-service-alb-1611589606.us-east-1.elb.amazonaws.com",
-        "http://shipping-service-alb-15976227.us-east-1.elb.amazonaws.com",
-        "http://products-service-alb-110946858.us-east-1.elb.amazonaws.com"
-      ] : null
+      environment = each.key == "orders-service" ? [
+        {
+          name  = "PAYMENTS_SERVICE_ENDPOINT"
+          value = "http://${aws_lb.application_lbs["payments-service"].dns_name}"
+        },
+        {
+          name  = "PRODUCTS_SERVICE_ENDPOINT"
+          value = "http://${aws_lb.application_lbs["products-service"].dns_name}"
+        },
+        {
+          name  = "SHIPPING_SERVICE_ENDPOINT"
+          value = "http://${aws_lb.application_lbs["shipping-service"].dns_name}"
+        }
+      ] : null 
+
     }
   ])
 }

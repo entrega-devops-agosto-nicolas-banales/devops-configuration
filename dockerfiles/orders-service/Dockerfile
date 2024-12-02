@@ -10,4 +10,4 @@ RUN chmod +x /start.sh
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["/start.sh"]
