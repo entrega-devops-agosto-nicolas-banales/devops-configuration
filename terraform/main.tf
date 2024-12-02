@@ -90,8 +90,20 @@ resource "aws_ecs_task_definition" "task_definition" {
         }
       ]
       
-      #aca iria
-
+      environment = [
+        {
+          name  = "PAYMENTS_SERVICE_URL"
+          value = "http://payments-service-alb-1611589606.us-east-1.elb.amazonaws.com"
+        },
+        {
+          name  = "SHIPPING_SERVICE_URL"
+          value = "http://shipping-service-alb-15976227.us-east-1.elb.amazonaws.com"
+        },
+        {
+          name  = "PRODUCTS_SERVICE_URL"
+          value = "http://products-service-alb-110946858.us-east-1.elb.amazonaws.com"
+        }
+      ]
     }
   ])
 }
