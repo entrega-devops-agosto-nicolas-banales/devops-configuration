@@ -89,6 +89,7 @@ resource "aws_ecs_task_definition" "task_definition" {
           protocol      = "tcp"
         }
       ]
+      
       environment = each.key == "orders-service" ? [
         {
           name  = "PAYMENTS_SERVICE_ENDPOINT"
@@ -102,7 +103,17 @@ resource "aws_ecs_task_definition" "task_definition" {
           name  = "SHIPPING_SERVICE_ENDPOINT"
           value = "http://${aws_lb.application_lbs["shipping-service"].dns_name}"
         }
-      ] : null
+      ] : null 
+  
+      logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = "/ecs/${each.key}"
+        awslogs-region        = var.aws_region
+        awslogs-stream-prefix = "ecs"
+      }
+    }
+    
     }
   ])
 }
