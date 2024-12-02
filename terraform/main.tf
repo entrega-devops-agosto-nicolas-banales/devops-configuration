@@ -90,30 +90,8 @@ resource "aws_ecs_task_definition" "task_definition" {
         }
       ]
       
-      environment = each.key == "orders-service" ? [
-        {
-          name  = "PAYMENTS_SERVICE_ENDPOINT"
-          value = "http://${aws_lb.application_lbs["payments-service"].dns_name}"
-        },
-        {
-          name  = "PRODUCTS_SERVICE_ENDPOINT"
-          value = "http://${aws_lb.application_lbs["products-service"].dns_name}"
-        },
-        {
-          name  = "SHIPPING_SERVICE_ENDPOINT"
-          value = "http://${aws_lb.application_lbs["shipping-service"].dns_name}"
-        }
-      ] : null 
-  
-      logConfiguration = {
-      logDriver = "awslogs"
-      options = {
-        awslogs-group         = "/ecs/${each.key}"
-        awslogs-region        = var.aws_region
-        awslogs-stream-prefix = "ecs"
-      }
-    }
-    
+      #aca iria
+
     }
   ])
 }
