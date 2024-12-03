@@ -1,10 +1,7 @@
-# Base image
 FROM openjdk:11-jdk-slim
 
-WORKDIR /app
+ARG JAR_FILE=orders-service-example-0.0.1-SNAPSHOT.jar
 
-COPY target/orders-service-example-0.0.1-SNAPSHOT-spring-boot.jar app.jar
+COPY target/${JAR_FILE} app.jar
 
-EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+CMD java -jar /app.jar $APP_ARGS
