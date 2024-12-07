@@ -106,4 +106,27 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.aws-access-key-id }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.aws-secret-access-key }}
-          AWS_SESSION_TOKEN: ${{ secrets.aws-session-token }}      
+          AWS_SESSION_TOKEN: ${{ secrets.aws-session-token }}    
+      
+      - name: Wait for ECS Service to Stabilize
+        run: |
+          aws ecs wait services-stable \
+            --cluster backend-ecs-cluster \
+            --services ${{ inputs.service-name }} \
+            --region us-east-1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.aws-access-key-id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.aws-secret-access-key }}
+          AWS_SESSION_TOKEN: ${{ secrets.aws-session-token }}
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Run Postman Tests
+        run: |
+          newman run devops-configuration/tests/backend-tests.json    

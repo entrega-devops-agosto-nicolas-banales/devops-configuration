@@ -1,0 +1,203 @@
+{
+  "info": {
+    "_postman_id": "973b8d98-1fec-4154-8def-12ca31be2193",
+    "name": "Obligatorio-Devops-Endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "18953824"
+  },
+  "item": [
+    {
+      "name": "Get All Products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "products-service-alb-1661164233.us-east-1.elb.amazonaws.com/products",
+          "host": [
+            "products-service-alb-1661164233",
+            "us-east-1",
+            "elb",
+            "amazonaws",
+            "com"
+          ],
+          "path": ["products"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Product By Id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "products-service-alb-1661164233.us-east-1.elb.amazonaws.com/products/111",
+          "host": [
+            "products-service-alb-1661164233",
+            "us-east-1",
+            "elb",
+            "amazonaws",
+            "com"
+          ],
+          "path": ["products", "111"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Payments Service",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "payments-service-alb-418458436.us-east-1.elb.amazonaws.com/payments/234",
+          "host": [
+            "payments-service-alb-418458436",
+            "us-east-1",
+            "elb",
+            "amazonaws",
+            "com"
+          ],
+          "path": ["payments", "234"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Order",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "[\"111\"]",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "orders-service-alb-2116084825.us-east-1.elb.amazonaws.com/orders",
+          "host": [
+            "orders-service-alb-2116084825",
+            "us-east-1",
+            "elb",
+            "amazonaws",
+            "com"
+          ],
+          "path": ["orders"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Shipping Service POST",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "shipping-service-alb-1784245012.us-east-1.elb.amazonaws.com/shipping/1234",
+          "host": [
+            "shipping-service-alb-1784245012",
+            "us-east-1",
+            "elb",
+            "amazonaws",
+            "com"
+          ],
+          "path": ["shipping", "1234"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "API_GATEWAY_IP",
+      "value": "172.17.0.3"
+    }
+  ]
+}
