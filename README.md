@@ -32,7 +32,7 @@ Alojar completamente en la nube pública una solución que utilice metodologías
 
 ### Diagrama de flujo CI/CD
 
-![CI_CD Diagram ](diagrams/CI_CD Diagram .jpg)
+![CI_CD Diagram ](diagrams/ci-cd-diagram.jpg)
 
 ### Descripción del Flujo 
 
