@@ -28,7 +28,7 @@ Alojar completamente en la nube pública una solución que utilice metodologías
 
 ## 2. Arquitectura de la Solución
 
-#### 
+
 
 ### Diagrama de flujo CI/CD
 
@@ -65,8 +65,6 @@ Alojar completamente en la nube pública una solución que utilice metodologías
      
 
 ## 3. Herramientas y Tecnologías Utilizadas
-
-
 
 El proyecto hace uso de una combinación de herramientas modernas para garantizar la calidad del código, la eficiencia en el desarrollo y despliegue, y la estabilidad de la infraestructura. Estas herramientas fueron seleccionadas para cumplir con los requisitos del caso de estudio.
 
@@ -110,9 +108,19 @@ El proyecto hace uso de una combinación de herramientas modernas para garantiza
 
 - **AWS S3**: La aplicación frontend está alojada como un sitio web estático utilizando un bucket S3 configurado para acceso público.
 
-#### 
+
 
 ## 4. Demostración de Componentes y Procesos
+
+#### Gestión del Proyecto: Tablero Kanban
+
+Como parte de la planificación y seguimiento de las tareas, se implementó un tablero Kanban en Trello para gestionar el trabajo del proyecto. Este tablero permitió visualizar el progreso de las tareas, organizar las actividades por categorías y priorizar las entregas.
+
+Link al tablero: https://trello.com/b/DAmeAsRF/devopsagostodiciembre2024nicolasbanales
+
+**Evidencia:**
+
+![CI_CD Diagram ](diagrams/trello.png)
 
 
 
@@ -192,7 +200,7 @@ El proyecto hace uso de una combinación de herramientas modernas para garantiza
 
 
 
-### Estrategia de Branching para los Microservicios
+## 4. Estrategia de Branching para los Microservicios
 
 Para organizar el código y facilitar futuras mejoras en el desarrollo de los microservicios backend, se adoptó una estrategia básica que sigue los principios iniciales de **GitFlow**, adaptada a las necesidades y el alcance del proyecto actual. Aunque todo el desarrollo y despliegue se realizó directamente en la rama principal (`main`), se crearon ramas adicionales para reflejar el formato y estructura de un flujo de trabajo más robusto.
 
@@ -208,3 +216,64 @@ Para organizar el código y facilitar futuras mejoras en el desarrollo de los mi
 3. **Ramas de Características (`feature/<nombre>`)**
    - Se creó una rama de ejemplo `feature/test-branch`.) para demostrar el uso de ramas de características y probar el flujo de trabajo.
    - Aunque no se utilizó para desarrollo activo, establece las bases para futuras colaboraciones y ciclos de mejora.
+
+
+
+## 6. Flujo y Estructura de Carpetas
+
+#### 
+
+Cada microservicio backend implementa un pipeline de CI/CD definido en un archivo `ci-cd.yml` dentro de su propio repositorio. Este archivo actúa como un punto de entrada que invoca el flujo principal `backend-ci-cd.yml` ubicado en el repositorio **devops-configuration**. El flujo principal maneja todas las etapas de CI/CD, incluyendo la validación de código, construcción de artefactos, pruebas, contenerización y despliegue.
+
+------
+
+#### **Estructura de Carpetas**
+
+La estructura del repositorio **devops-configuration** está diseñada para mantener la modularidad y facilitar la reutilización de configuraciones y archivos. A continuación, se describe cada directorio:
+
+
+
+`devops-configuration/`
+`├── .github/`
+`│   └── workflows/`
+`│       ├── backend-ci-cd.yml`
+`│       └── deploy-to-s3.yml`
+`├── diagrams/`
+`├── dockerfiles/`
+`│   ├── orders-service/`
+`│   │   └── Dockerfile`
+`│   ├── products-service/`
+`│   │   └── Dockerfile`
+`│   ├── shipping-service/`
+`│   │   └── Dockerfile`
+`│   └── payments-service/`
+`│       └── Dockerfile`
+`├── terraform/`
+`│   ├── main.tf`
+`│   ├── variables.tf`
+`├── tests/`
+`│   └── backend-tests.json`
+`├── .gitignore            `
+`└── README.md              `
+
+
+
+## 7. Gestión del Proyecto y Limitaciones
+
+Debido a las limitaciones de tiempo personales en la entrega del proyecto, se optó por priorizar las tareas esenciales para completar los objetivos principales. La estrategia adoptada permitió enfocar esfuerzos en la configuración de la infraestructura, el diseño del pipeline CI/CD, y la implementación de los microservicios y el frontend en un único ambiente.
+
+#### **Limitaciones Técnicas y de Tiempo**
+
+1. **Despliegue en Ambientes Múltiples**:
+   - El requerimiento inicial planteaba la necesidad de desplegar los servicios en tres ambientes separados: **Dev**, **Test**, y **Prod**.
+   - Por razones de tiempo, el despliegue fue realizado únicamente en un ambiente consolidado, el cual incluyó:
+     - Un único cluster ECS con todos los microservicios backend.
+     - La aplicación frontend alojada en un bucket S3.
+2. **Escalabilidad del Despliegue**:
+   - Aunque la infraestructura diseñada soporta el despliegue en múltiples ambientes, no se alcanzó a realizar la réplica de configuraciones para cada uno debido a la carga de trabajo en las etapas iniciales.
+3. **Otras Limitaciones Menores**:
+   - La configuración actual del pipeline CI/CD no considera una calidad mínima obligatoria en SonarCloud para aprobar un cambio, pero se notifican los resultados para seguimiento.
+
+------
+
+A pesar de estas limitaciones, los objetivos generales del proyecto fueron cumplidos, y se logró implementar una solución funcional que incorpora las mejores prácticas DevOps y herramientas modernas de automatización.
