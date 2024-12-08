@@ -221,7 +221,7 @@ Para organizar el código y facilitar futuras mejoras en el desarrollo de los mi
 
 ## 6. Flujo y Estructura de Carpetas
 
-#### 
+#### ![aws1](diagrams/folder-structure.png)
 
 Cada microservicio backend implementa un pipeline de CI/CD definido en un archivo `ci-cd.yml` dentro de su propio repositorio. Este archivo actúa como un punto de entrada que invoca el flujo principal `backend-ci-cd.yml` ubicado en el repositorio **devops-configuration**. El flujo principal maneja todas las etapas de CI/CD, incluyendo la validación de código, construcción de artefactos, pruebas, contenerización y despliegue.
 
@@ -232,29 +232,6 @@ Cada microservicio backend implementa un pipeline de CI/CD definido en un archiv
 La estructura del repositorio **devops-configuration** está diseñada para mantener la modularidad y facilitar la reutilización de configuraciones y archivos. A continuación, se describe cada directorio:
 
 
-
-`devops-configuration/`
-`├── .github/`
-`│   └── workflows/`
-`│       ├── backend-ci-cd.yml`
-`│       └── deploy-to-s3.yml`
-`├── diagrams/`
-`├── dockerfiles/`
-`│   ├── orders-service/`
-`│   │   └── Dockerfile`
-`│   ├── products-service/`
-`│   │   └── Dockerfile`
-`│   ├── shipping-service/`
-`│   │   └── Dockerfile`
-`│   └── payments-service/`
-`│       └── Dockerfile`
-`├── terraform/`
-`│   ├── main.tf`
-`│   ├── variables.tf`
-`├── tests/`
-`│   └── backend-tests.json`
-`├── .gitignore            `
-`└── README.md              `
 
 
 
