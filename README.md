@@ -128,7 +128,7 @@ El proyecto hace uso de una combinación de herramientas modernas para garantiza
 
     
 
-![image-20241208073936956](C:\Users\ninot\AppData\Roaming\Typora\typora-user-images\image-20241208073936956.png)
+![CI_CD Diagram ](diagrams/sonar.png)
 
 #### **Pipeline CI/CD**
 
@@ -136,9 +136,9 @@ El proyecto hace uso de una combinación de herramientas modernas para garantiza
 
 
 
-![image-20241208074204279](C:\Users\ninot\AppData\Roaming\Typora\typora-user-images\image-20241208074204279.png)
+![github-actions](diagrams/github-actions.png)
 
-#### **Arquitectura de Infraestructura**
+#### Iac
 
 **Descripción:** La infraestructura está diseñada utilizando Terraform y alojada en AWS. Incluye componentes como:
 
@@ -146,3 +146,65 @@ El proyecto hace uso de una combinación de herramientas modernas para garantiza
 - Buckets S3 para frontend.
 - Load Balancers para distribución de tráfico.
 
+![aws1](diagrams/aws1.png)
+
+![aws1](diagrams/aws2.png)
+
+![aws1](diagrams/aws3.png)
+
+####  Imágenes Docker en DockerHub
+
+**Descripción:** Las imágenes de los microservicios backend se construyen y publican en DockerHub como parte del pipeline CI/CD. Cada imagen está etiquetada con el hash del commit y la versión `latest` .
+
+**Evidencia:**
+
+- Listado de imágenes publicadas con sus tags (`latest`, `commit-hash`) en DockerHub.
+
+  
+
+  ![aws1](diagrams/dockerhubb.png)
+
+  
+
+#### **Alojamiento del Frontend**
+
+- **Descripción:** La aplicación frontend está alojada en un bucket S3 configurado como un sitio web estático. El bucket tiene políticas específicas para permitir acceso público.
+
+- **Evidencia**:
+
+  
+
+![aws1](diagrams/s3_fe.png)
+
+
+
+
+
+#### **Monitoreo y Automatización Serverless**
+
+- **Descripción:** Una función Lambda monitorea los servicios backend cada 5 minutos. Se registran los resultados en un bucket S3 configurado para almacenamiento seguro.
+- **Evidencia**:
+  - Logs generados en S3.
+
+
+
+![aws1](diagrams/aws4.png)
+
+
+
+### Estrategia de Branching para los Microservicios
+
+Para organizar el código y facilitar futuras mejoras en el desarrollo de los microservicios backend, se adoptó una estrategia básica que sigue los principios iniciales de **GitFlow**, adaptada a las necesidades y el alcance del proyecto actual. Aunque todo el desarrollo y despliegue se realizó directamente en la rama principal (`main`), se crearon ramas adicionales para reflejar el formato y estructura de un flujo de trabajo más robusto.
+
+------
+
+#### **Ramas Implementadas**
+
+1. **Rama Principal (`main`)**
+   - Esta rama contiene el código listo para producción y fue utilizada como el punto central para los despliegues de los microservicios.
+2. **Rama de Desarrollo (`develop`)**
+   - Creada como preparación para seguir la estrategia de **GitFlow** en futuras iteraciones del proyecto.
+   - En esta fase inicial, no se integraron cambios en esta rama, pero está configurada para servir como base para futuras características.
+3. **Ramas de Características (`feature/<nombre>`)**
+   - Se creó una rama de ejemplo `feature/test-branch`.) para demostrar el uso de ramas de características y probar el flujo de trabajo.
+   - Aunque no se utilizó para desarrollo activo, establece las bases para futuras colaboraciones y ciclos de mejora.
